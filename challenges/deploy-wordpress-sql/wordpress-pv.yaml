@@ -1,7 +1,11 @@
+# cat <<EOF > ./wordpress-pv.yaml
 apiVersion: v1
 kind: PersistentVolume
 metadata: 
    name: wordpress-persistent-storage
+   labels:
+      app: wordpress
+      tier: frontend
 spec:
   capacity:
     storage: 1 Gi
@@ -9,8 +13,29 @@ spec:
   accessMode: 
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Recycle
-  mountOptions: 
-     - hard
-     - nfsvers=4.1
+    
   nfs:
     path: /html
+    server: nfs01
+
+---
+
+# cat <<EOF > ./wordpress-pv.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata: 
+   name: mysql-persistent-storage
+   labels:
+      app: wordpress
+      tier: mysql
+spec:
+  capacity:
+    storage: 1 Gi
+  volumeMode: Filesystem
+  accessMode: 
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Recycle
+    
+  nfs:
+    path: /mysql
+    server: nfs01
